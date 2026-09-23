@@ -5,7 +5,7 @@ const STORAGE_KEY = "prism.todos";
 const NOTES_KEY = "prism.notes";
 const PROFILE_KEY = "prism.profile";
 const THEME_KEY = "prism.theme";
-const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = window.__PRISM_GOOGLE_CLIENT_ID__ || "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
 
 function getProfile() {
   const saved = localStorage.getItem(PROFILE_KEY);
@@ -312,16 +312,30 @@ function handleGoogleResponse(response) {
 function initializeGoogleLogin() {
   const googleButton = document.getElementById("google-login");
 
-  if (!googleButton || !window.google || !window.google.accounts || !window.google.accounts.id) {
+  if (!googleButton) {
     return;
   }
 
-  const isGoogleClientConfigured = GOOGLE_CLIENT_ID && GOOGLE_CLIENT_ID !== "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+  const hasGoogleSdk = !!(window.google && window.google.accounts && window.google.accounts.id);
+  const isGoogleClientConfigured = Boolean(
+    GOOGLE_CLIENT_ID && GOOGLE_CLIENT_ID !== "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+  );
 
   if (!isGoogleClientConfigured) {
+    googleButton.dataset.fallback = "manual";
+    googleButton.title = "Google OAuth is not configured yet. Using demo profile flow until a real client ID is added.";
     googleButton.addEventListener("click", () => {
-      window.alert("Google OAuth is not configured yet. Replace YOUR_GOOGLE_CLIENT_ID with a real Google client ID in script.js to enable real sign-in.");
-    });
+      createGoogleProfile();
+    }, { once: true });
+    return;
+  }
+
+  if (!hasGoogleSdk) {
+    googleButton.dataset.fallback = "manual";
+    googleButton.title = "Google SDK not loaded yet. Using demo profile flow until the SDK is available.";
+    googleButton.addEventListener("click", () => {
+      createGoogleProfile();
+    }, { once: true });
     return;
   }
 
