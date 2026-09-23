@@ -4,6 +4,7 @@
 const STORAGE_KEY = "prism.todos";
 const NOTES_KEY = "prism.notes";
 const PROFILE_KEY = "prism.profile";
+const THEME_KEY = "prism.theme";
 const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
 
 function getProfile() {
@@ -388,6 +389,48 @@ function saveSettings(profileUpdate) {
   closeSettings();
 }
 
+function applyTheme(themeName) {
+  const validThemes = ["cyberpunk", "violet", "sunset"];
+  const nextTheme = validThemes.includes(themeName) ? themeName : "cyberpunk";
+  document.body.dataset.theme = nextTheme;
+  localStorage.setItem(THEME_KEY, nextTheme);
+
+  document.querySelectorAll(".theme-option").forEach((button) => {
+    const isActive = button.dataset.theme === nextTheme;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+}
+
+function initializeSettingsNavigation() {
+  const menuButtons = document.querySelectorAll(".menu-item");
+  const panels = document.querySelectorAll(".settings-panel");
+
+  if (!menuButtons.length || !panels.length) {
+    return;
+  }
+
+  menuButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const selectedPanel = button.dataset.panel;
+
+      menuButtons.forEach((item) => item.classList.toggle("active", item === button));
+      panels.forEach((panel) => {
+        panel.classList.toggle("active", panel.dataset.panel === selectedPanel);
+      });
+    });
+  });
+
+  const storedTheme = localStorage.getItem(THEME_KEY) || "cyberpunk";
+  applyTheme(storedTheme);
+
+  document.querySelectorAll(".theme-option").forEach((button) => {
+    button.addEventListener("click", () => {
+      applyTheme(button.dataset.theme);
+    });
+  });
+}
+
 function initializeProfileSetup() {
   const profileForm = document.getElementById("profile-form");
   const googleButton = document.getElementById("google-login");
@@ -398,6 +441,8 @@ function initializeProfileSetup() {
   const closeSettingsButton = document.getElementById("close-settings");
   const settingsForm = document.getElementById("settings-form");
   const dropdown = document.getElementById("settings-dropdown");
+
+  initializeSettingsNavigation();
 
   if (logoutButton) {
     logoutButton.addEventListener("click", logoutFromDashboard);

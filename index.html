@@ -80,13 +80,13 @@
         </div>
 
         <div class="settings-menu-items">
-          <button type="button" class="menu-item active">Profile</button>
-          <button type="button" class="menu-item">Schedule</button>
-          <button type="button" class="menu-item">Themes</button>
-          <button type="button" class="menu-item">System Logs</button>
+          <button type="button" class="menu-item active" data-panel="profile">Profile</button>
+          <button type="button" class="menu-item" data-panel="schedule">Schedule</button>
+          <button type="button" class="menu-item" data-panel="themes">Themes</button>
+          <button type="button" class="menu-item" data-panel="system-logs">System Logs</button>
         </div>
 
-        <form id="settings-form" class="settings-form">
+        <form id="settings-form" class="settings-panel active" data-panel="profile">
           <label>
             Full name
             <input id="settings-name" type="text" name="name" placeholder="Alex Carter" />
@@ -113,6 +113,53 @@
             <button type="submit" class="primary-button">Save Settings</button>
           </div>
         </form>
+
+        <div id="schedule-panel" class="settings-panel" data-panel="schedule" aria-label="Schedule panel">
+          <div class="settings-panel-block">
+            <h3>Daily schedule</h3>
+            <ul class="mini-list">
+              <li><span>08:00</span><strong>Morning review</strong></li>
+              <li><span>09:30</span><strong>Math class</strong></li>
+              <li><span>11:00</span><strong>Science lab</strong></li>
+              <li><span>13:00</span><strong>Lunch + reset</strong></li>
+              <li><span>15:00</span><strong>Code practice</strong></li>
+              <li><span>18:30</span><strong>Homework block</strong></li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="themes-panel" class="settings-panel" data-panel="themes" aria-label="Themes panel">
+          <div class="settings-panel-block">
+            <h3>Theme presets</h3>
+            <div class="theme-options" aria-label="Theme selection">
+              <button type="button" class="theme-option active" data-theme="cyberpunk">
+                <span class="swatch swatch-cyberpunk"></span>
+                Cyberpunk
+              </button>
+              <button type="button" class="theme-option" data-theme="violet">
+                <span class="swatch swatch-violet"></span>
+                Violet
+              </button>
+              <button type="button" class="theme-option" data-theme="sunset">
+                <span class="swatch swatch-sunset"></span>
+                Sunset
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="system-logs-panel" class="settings-panel" data-panel="system-logs" aria-label="System logs panel">
+          <div class="settings-panel-block">
+            <h3>System logs</h3>
+            <ul class="log-list">
+              <li>Boot sequence complete.</li>
+              <li>Profile sync verified.</li>
+              <li>Clock initialized in 12-hour mode.</li>
+              <li>Theme system ready.</li>
+              <li>Student dashboard online.</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <section class="profile-panel panel" aria-label="Student info panel">
