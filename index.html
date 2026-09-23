@@ -73,41 +73,46 @@
         </div>
       </header>
 
-      <div id="settings-modal" class="settings-modal hidden" aria-modal="true" role="dialog" aria-labelledby="settings-title">
-        <div class="settings-panel">
-          <div class="settings-header">
-            <h2 id="settings-title">System Settings</h2>
-            <button id="close-settings" class="close-button" type="button" aria-label="Close settings">×</button>
+      <div id="settings-dropdown" class="settings-dropdown hidden" aria-label="Settings menu">
+        <div class="settings-menu-header">
+          <span>System Menu</span>
+          <button id="close-settings" class="close-button" type="button" aria-label="Close settings">×</button>
+        </div>
+
+        <div class="settings-menu-items">
+          <button type="button" class="menu-item active">Profile</button>
+          <button type="button" class="menu-item">Schedule</button>
+          <button type="button" class="menu-item">Themes</button>
+          <button type="button" class="menu-item">System Logs</button>
+        </div>
+
+        <form id="settings-form" class="settings-form">
+          <label>
+            Full name
+            <input id="settings-name" type="text" name="name" placeholder="Alex Carter" />
+          </label>
+
+          <div class="two-column">
+            <label>
+              School
+              <input id="settings-school" type="text" name="school" placeholder="North Ridge High" />
+            </label>
+
+            <label>
+              Grade
+              <input id="settings-grade" type="text" name="grade" placeholder="11th Grade" />
+            </label>
           </div>
 
-          <form id="settings-form" class="settings-form">
-            <label>
-              Full name
-              <input id="settings-name" type="text" name="name" placeholder="Alex Carter" />
-            </label>
+          <label>
+            Focus goal
+            <textarea id="settings-goal" name="goal" rows="3" placeholder="Describe your focus goal..."></textarea>
+          </label>
 
-            <div class="two-column">
-              <label>
-                School
-                <input id="settings-school" type="text" name="school" placeholder="North Ridge High" />
-              </label>
-
-              <label>
-                Grade
-                <input id="settings-grade" type="text" name="grade" placeholder="11th Grade" />
-              </label>
-            </div>
-
-            <label>
-              Focus goal
-              <textarea id="settings-goal" name="goal" rows="3" placeholder="Describe your focus goal..."></textarea>
-            </label>
-
-            <div class="settings-actions">
-              <button type="submit" class="primary-button">Save Settings</button>
-            </div>
-          </form>
-        </div>
+          <div class="settings-actions">
+            <button type="submit" class="primary-button">Save Settings</button>
+          </div>
+        </form>
       </div>
 
       <section class="profile-panel panel" aria-label="Student info panel">

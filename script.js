@@ -348,8 +348,8 @@ function createGoogleProfile() {
 }
 
 function openSettings() {
-  const modal = document.getElementById("settings-modal");
-  if (!modal) {
+  const dropdown = document.getElementById("settings-dropdown");
+  if (!dropdown) {
     return;
   }
 
@@ -363,16 +363,16 @@ function openSettings() {
   document.getElementById("settings-grade").value = profile.grade || "";
   document.getElementById("settings-goal").value = profile.goal || "";
 
-  modal.classList.remove("hidden");
+  dropdown.classList.remove("hidden");
 }
 
 function closeSettings() {
-  const modal = document.getElementById("settings-modal");
-  if (!modal) {
+  const dropdown = document.getElementById("settings-dropdown");
+  if (!dropdown) {
     return;
   }
 
-  modal.classList.add("hidden");
+  dropdown.classList.add("hidden");
 }
 
 function saveSettings(profileUpdate) {
@@ -397,7 +397,7 @@ function initializeProfileSetup() {
   const settingsButton = document.getElementById("settings-button");
   const closeSettingsButton = document.getElementById("close-settings");
   const settingsForm = document.getElementById("settings-form");
-  const modal = document.getElementById("settings-modal");
+  const dropdown = document.getElementById("settings-dropdown");
 
   if (logoutButton) {
     logoutButton.addEventListener("click", logoutFromDashboard);
@@ -408,16 +408,23 @@ function initializeProfileSetup() {
   }
 
   if (settingsButton) {
-    settingsButton.addEventListener("click", openSettings);
+    settingsButton.addEventListener("click", () => {
+      const isHidden = dropdown && dropdown.classList.contains("hidden");
+      if (isHidden) {
+        openSettings();
+      } else {
+        closeSettings();
+      }
+    });
   }
 
   if (closeSettingsButton) {
     closeSettingsButton.addEventListener("click", closeSettings);
   }
 
-  if (modal) {
-    modal.addEventListener("click", (event) => {
-      if (event.target === modal) {
+  if (dropdown) {
+    dropdown.addEventListener("click", (event) => {
+      if (event.target === dropdown) {
         closeSettings();
       }
     });
