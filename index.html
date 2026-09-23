@@ -1,44 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>P.R.I.S.M. // Terminal</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header class="system-header">
-        <div class="status-light"></div>
-        <p>[ INITIALIZING P.R.I.S.M. CORE ENGINE v1.0 ]</p>
-    </header>
-    <main class="dashboard-grid">
-        <section class="widget">
-            <h2>SYSTEM STATUS: ONLINE</h2>
-            <p id="greeting">Awaiting user parameters...</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>P.R.I.S.M. Dashboard</title>
+    <meta
+      name="description"
+      content="Personal Routine Interface for Student Management"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="auth-screen" class="auth-screen" aria-label="Account setup">
+      <div class="auth-panel">
+        <div class="auth-badge">[ ACCOUNT BOOTSTRAP ]</div>
+        <h1>Welcome to P.R.I.S.M.</h1>
+        <p>Set up your profile so your dashboard feels like yours.</p>
+
+        <button id="google-login" class="google-button" type="button">
+          Continue with Google
+        </button>
+
+        <form id="profile-form" class="profile-form">
+          <label>
+            Full name
+            <input id="profile-name" type="text" name="name" placeholder="Alex Carter" required />
+          </label>
+
+          <div class="two-column">
+            <label>
+              School
+              <input id="profile-school" type="text" name="school" placeholder="North Ridge High" required />
+            </label>
+
+            <label>
+              Grade
+              <input id="profile-grade" type="text" name="grade" placeholder="11th Grade" required />
+            </label>
+          </div>
+
+          <label>
+            Focus goal
+            <textarea id="profile-goal" name="goal" rows="3" placeholder="Finish chemistry prep and stay consistent with coding practice."></textarea>
+          </label>
+
+          <button type="submit" class="primary-button">Enter Dashboard</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="app-shell">
+      <header class="system-header" aria-label="System header">
+        <div class="header-left">
+          <span class="brand">P.R.I.S.M.</span>
+          <span id="account-name" class="account-name">Guest</span>
+        </div>
+
+        <div class="header-center" aria-live="polite">
+          [ INITIALIZING P.R.I.S.M. CORE ENGINE v1.0 ]
+        </div>
+
+        <div class="header-right">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>SYSTEM ONLINE</span>
+        </div>
+      </header>
+
+      <main class="dashboard-grid">
+        <section class="panel panel-clock" aria-labelledby="clock-heading">
+          <div class="panel-label" id="clock-heading">CORE CLOCK</div>
+          <div id="clock" class="clock-time">--:--:--</div>
+          <div id="greeting" class="greeting">Initializing...</div>
+          <div id="date" class="date-text">Loading date...</div>
         </section>
-                <!-- Widget 2: Quick Launch Network Hub -->
-        <section class="widget" id="launch-hub">
-            <h2>MODULE // QUICK_LAUNCH_HUB</h2>
-            <div class="shortcut-grid">
-                <!-- ShortCut 1 -->
-                <a href="https://github.com" target="_blank" class="shortcut-btn">
-                    <span class="icon">💻</span> GITHUB
-                </a>
-                <!-- ShortCut 2 -->
-                <a href="https://youtube.com" target="_blank" class="shortcut-btn">
-                    <span class="icon">📺</span> YOUTUBE
-                </a>
-                <!-- ShortCut 3 -->
-                <a href="https://google.com" target="_blank" class="shortcut-btn">
-                    <span class="icon">🔍</span> GOOGLE
-                </a>
-                <!-- ShortCut 4 -->
-                <a href="https://discord.com" target="_blank" class="shortcut-btn">
-                    <span class="icon">💬</span> DISCORD
-                </a>
+
+        <section class="panel panel-todo" aria-labelledby="todo-heading">
+          <div class="panel-label" id="todo-heading">STUDENT TASK MATRIX</div>
+
+          <ul id="todo-list" class="todo-list" aria-live="polite"></ul>
+
+          <form id="todo-form" class="todo-form">
+            <input
+              id="todo-input"
+              type="text"
+              maxlength="80"
+              placeholder="Add a study task..."
+              aria-label="Add a new task"
+            />
+            <button type="submit">ADD</button>
+          </form>
+        </section>
+
+        <section class="panel panel-launch" aria-labelledby="launch-heading">
+          <div class="panel-label" id="launch-heading">QUICK LAUNCH</div>
+
+          <nav class="launch-grid" aria-label="Quick launch shortcuts">
+            <a href="https://www.google.com" target="_blank" rel="noreferrer">Google</a>
+            <a href="https://www.gmail.com" target="_blank" rel="noreferrer">Gmail</a>
+            <a href="https://classroom.google.com" target="_blank" rel="noreferrer">Classroom</a>
+            <a href="https://www.youtube.com" target="_blank" rel="noreferrer">YouTube</a>
+            <a href="https://www.wikipedia.org" target="_blank" rel="noreferrer">Wikipedia</a>
+            <a href="https://www.github.com" target="_blank" rel="noreferrer">GitHub</a>
+          </nav>
+        </section>
+      </main>
+
+      <section class="module-grid" aria-label="Academic widgets">
+        <section class="panel panel-focus" aria-labelledby="focus-heading">
+          <div class="panel-label" id="focus-heading">SUBJECT FOCUS</div>
+
+          <div class="subject-list">
+            <div class="subject-item">
+              <div class="subject-topline">
+                <span>Math</span>
+                <span>78%</span>
+              </div>
+              <div class="progress-bar"><span style="width: 78%"></span></div>
             </div>
+
+            <div class="subject-item">
+              <div class="subject-topline">
+                <span>Science</span>
+                <span>65%</span>
+              </div>
+              <div class="progress-bar"><span style="width: 65%"></span></div>
+            </div>
+
+            <div class="subject-item">
+              <div class="subject-topline">
+                <span>Literature</span>
+                <span>82%</span>
+              </div>
+              <div class="progress-bar"><span style="width: 82%"></span></div>
+            </div>
+
+            <div class="subject-item">
+              <div class="subject-topline">
+                <span>Code Lab</span>
+                <span>91%</span>
+              </div>
+              <div class="progress-bar"><span style="width: 91%"></span></div>
+            </div>
+          </div>
         </section>
-    </main>
+
+        <section class="panel panel-schedule" aria-labelledby="schedule-heading">
+          <div class="panel-label" id="schedule-heading">DAILY SCHEDULE</div>
+
+          <ul class="schedule-list">
+            <li><span class="time">08:00</span><span class="event">Morning review</span></li>
+            <li><span class="time">09:30</span><span class="event">Math class</span></li>
+            <li><span class="time">11:00</span><span class="event">Science lab</span></li>
+            <li><span class="time">13:00</span><span class="event">Lunch + reset</span></li>
+            <li><span class="time">15:00</span><span class="event">Code practice</span></li>
+            <li><span class="time">18:30</span><span class="event">Homework block</span></li>
+          </ul>
+        </section>
+
+        <section class="panel panel-deadlines" aria-labelledby="deadlines-heading">
+          <div class="panel-label" id="deadlines-heading">UPCOMING DEADLINES</div>
+
+          <ul class="deadline-list">
+            <li><span>Algebra quiz</span><strong>Thu 4:00 PM</strong></li>
+            <li><span>Lab report</span><strong>Fri 9:15 AM</strong></li>
+            <li><span>Essay draft</span><strong>Mon 2:30 PM</strong></li>
+            <li><span>GitHub task</span><strong>Wed 7:00 PM</strong></li>
+          </ul>
+        </section>
+
+        <section class="panel panel-priority" aria-labelledby="priority-heading">
+          <div class="panel-label" id="priority-heading">TODAY'S PRIORITIES</div>
+
+          <ul id="priority-list" class="priority-list" aria-live="polite">
+            <li><input type="checkbox" checked /> <span>Finish math worksheet</span></li>
+            <li><input type="checkbox" /> <span>Review chemistry notes</span></li>
+            <li><input type="checkbox" /> <span>Push code project update</span></li>
+            <li><input type="checkbox" /> <span>Prep for lab discussion</span></li>
+          </ul>
+        </section>
+
+        <section class="panel panel-notes" aria-labelledby="notes-heading">
+          <div class="panel-label" id="notes-heading">CLASS NOTES</div>
+
+          <textarea
+            id="notes-input"
+            class="notes-input"
+            aria-label="Class notes"
+            placeholder="Write your focus notes here..."
+          ></textarea>
+        </section>
+      </section>
+    </div>
+
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
