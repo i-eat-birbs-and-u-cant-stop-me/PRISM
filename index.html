@@ -9,6 +9,7 @@
       content="Personal Routine Interface for Student Management"
     />
     <link rel="stylesheet" href="style.css" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
   <body>
     <div id="auth-screen" class="auth-screen" aria-label="Account setup">
@@ -61,10 +62,37 @@
         </div>
 
         <div class="header-right">
+          <div class="profile-summary" aria-label="Student profile summary">
+            <span id="profile-school-tag" class="profile-school-tag">School</span>
+            <button id="logout-button" class="header-button" type="button">Logout</button>
+            <button id="reset-profile-button" class="header-button danger" type="button">Reset</button>
+          </div>
           <span class="status-dot" aria-hidden="true"></span>
           <span>SYSTEM ONLINE</span>
         </div>
       </header>
+
+      <section class="profile-panel panel" aria-label="Student info panel">
+        <div class="panel-label">STUDENT PROFILE</div>
+        <div class="profile-overview">
+          <div>
+            <span class="mini-label">Operator</span>
+            <strong id="profile-name-card">Student</strong>
+          </div>
+          <div>
+            <span class="mini-label">School</span>
+            <strong id="profile-school-card">School</strong>
+          </div>
+          <div>
+            <span class="mini-label">Grade</span>
+            <strong id="profile-grade-card">Grade</strong>
+          </div>
+          <div>
+            <span class="mini-label">Focus</span>
+            <strong id="profile-goal-card">Stay consistent</strong>
+          </div>
+        </div>
+      </section>
 
       <main class="dashboard-grid">
         <section class="panel panel-clock" aria-labelledby="clock-heading">

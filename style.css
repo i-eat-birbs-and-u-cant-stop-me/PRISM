@@ -216,6 +216,70 @@ body.dashboard-ready .auth-screen {
   box-shadow: 0 0 10px var(--shadow-green);
 }
 
+.profile-summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 12px;
+}
+
+.profile-school-tag,
+.header-button {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.profile-school-tag {
+  color: var(--cyan);
+  text-shadow: 0 0 10px rgba(79, 231, 255, 0.4);
+}
+
+.header-button {
+  border: 1px solid rgba(79, 231, 255, 0.32);
+  background: transparent;
+  color: var(--text);
+  padding: 7px 10px;
+  cursor: pointer;
+}
+
+.header-button.danger {
+  border-color: rgba(255, 94, 168, 0.4);
+  color: var(--pink);
+}
+
+.profile-panel {
+  margin: 0 20px 18px;
+  min-height: auto;
+}
+
+.profile-overview {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.profile-overview > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(9, 16, 20, 0.8);
+  border: 1px solid rgba(79, 231, 255, 0.2);
+  padding: 12px;
+}
+
+.mini-label {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.62rem;
+}
+
+.profile-overview strong {
+  color: var(--text);
+  font-size: 0.92rem;
+}
+
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1.05fr 1.35fr 1fr;
@@ -512,7 +576,8 @@ body.dashboard-ready .auth-screen {
     justify-content: center;
   }
 
-  .two-column {
+  .two-column,
+  .profile-overview {
     grid-template-columns: 1fr;
   }
 

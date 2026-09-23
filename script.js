@@ -4,6 +4,7 @@
 const STORAGE_KEY = "prism.todos";
 const NOTES_KEY = "prism.notes";
 const PROFILE_KEY = "prism.profile";
+const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
 
 function getProfile() {
   const saved = localStorage.getItem(PROFILE_KEY);
@@ -124,10 +125,10 @@ function updateClock() {
 
   const now = new Date();
   const timeString = now.toLocaleTimeString([], {
-    hour: "2-digit",
+    hour: "numeric",
     minute: "2-digit",
     second: "2-digit",
-    hour12: false
+    hour12: true
   });
 
   const dateString = now.toLocaleDateString([], {
@@ -146,8 +147,11 @@ function updateClock() {
     greeting = "Good afternoon";
   }
 
+  const profile = getProfile();
+  const firstName = profile && profile.name ? profile.name.trim().split(" ")[0] : "student operator";
+
   clockElement.textContent = timeString;
-  greetingElement.textContent = `${greeting}, student operator.`;
+  greetingElement.textContent = `${greeting}, ${firstName}.`;
   dateElement.textContent = dateString;
 }
 
@@ -194,10 +198,35 @@ function initializePriorityList() {
 function applyProfileToDashboard(profile) {
   const accountName = document.getElementById("account-name");
   const greeting = document.getElementById("greeting");
+  const schoolTag = document.getElementById("profile-school-tag");
+  const profileNameCard = document.getElementById("profile-name-card");
+  const profileSchoolCard = document.getElementById("profile-school-card");
+  const profileGradeCard = document.getElementById("profile-grade-card");
+  const profileGoalCard = document.getElementById("profile-goal-card");
 
   if (accountName) {
     const firstName = profile.name ? profile.name.trim().split(" ")[0] : "Student";
     accountName.textContent = firstName;
+  }
+
+  if (schoolTag) {
+    schoolTag.textContent = profile.school || "School";
+  }
+
+  if (profileNameCard) {
+    profileNameCard.textContent = profile.name || "Student";
+  }
+
+  if (profileSchoolCard) {
+    profileSchoolCard.textContent = profile.school || "School";
+  }
+
+  if (profileGradeCard) {
+    profileGradeCard.textContent = profile.grade || "Grade";
+  }
+
+  if (profileGoalCard) {
+    profileGoalCard.textContent = profile.goal || "Stay consistent";
   }
 
   if (greeting) {
@@ -219,10 +248,90 @@ function applyProfileToDashboard(profile) {
 function showDashboard(profile) {
   document.body.classList.add("dashboard-ready");
   applyProfileToDashboard(profile);
+  updateClock();
+
+  if (!window.__prismClockInterval) {
+    window.__prismClockInterval = setInterval(updateClock, 1000);
+  }
 }
 
 function hideDashboard() {
   document.body.classList.remove("dashboard-ready");
+}
+
+function logoutFromDashboard() {
+  localStorage.removeItem(PROFILE_KEY);
+  location.reload();
+}
+
+function resetProfileFromDashboard() {
+  localStorage.removeItem(PROFILE_KEY);
+
+  const profileForm = document.getElementById("profile-form");
+  if (profileForm) {
+    profileForm.reset();
+  }
+
+  location.reload();
+}
+
+function decodeJwtPayload(token) {
+  const base64Url = token.split(".")[1];
+  const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), "=");
+  const json = decodeURIComponent(
+    atob(padded)
+      .split("")
+      .map((char) => `%${`00${char.charCodeAt(0).toString(16)}`.slice(-2)}`)
+      .join("")
+  );
+
+  return JSON.parse(json);
+}
+
+function handleGoogleResponse(response) {
+  if (!response || !response.credential) {
+    return;
+  }
+
+  const payload = decodeJwtPayload(response.credential);
+  const profile = {
+    name: payload.name || payload.given_name || "Google Student",
+    school: payload.hd || "Your School",
+    grade: "Student",
+    goal: "Stay organized and keep momentum with weekly goals.",
+    provider: "google",
+    email: payload.email || ""
+  };
+
+  saveProfile(profile);
+  showDashboard(profile);
+}
+
+function initializeGoogleLogin() {
+  const googleButton = document.getElementById("google-login");
+
+  if (!googleButton || !window.google || !window.google.accounts || !window.google.accounts.id) {
+    return;
+  }
+
+  const isGoogleClientConfigured = GOOGLE_CLIENT_ID && GOOGLE_CLIENT_ID !== "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+
+  if (!isGoogleClientConfigured) {
+    googleButton.addEventListener("click", () => {
+      window.alert("Google OAuth is not configured yet. Replace YOUR_GOOGLE_CLIENT_ID with a real Google client ID in script.js to enable real sign-in.");
+    });
+    return;
+  }
+
+  window.google.accounts.id.initialize({
+    client_id: GOOGLE_CLIENT_ID,
+    callback: handleGoogleResponse
+  });
+
+  googleButton.addEventListener("click", () => {
+    window.google.accounts.id.prompt();
+  });
 }
 
 function createGoogleProfile() {
@@ -242,6 +351,16 @@ function initializeProfileSetup() {
   const profileForm = document.getElementById("profile-form");
   const googleButton = document.getElementById("google-login");
   const existingProfile = getProfile();
+  const logoutButton = document.getElementById("logout-button");
+  const resetButton = document.getElementById("reset-profile-button");
+
+  if (logoutButton) {
+    logoutButton.addEventListener("click", logoutFromDashboard);
+  }
+
+  if (resetButton) {
+    resetButton.addEventListener("click", resetProfileFromDashboard);
+  }
 
   if (existingProfile) {
     showDashboard(existingProfile);
@@ -250,9 +369,13 @@ function initializeProfileSetup() {
 
   hideDashboard();
 
-  googleButton.addEventListener("click", () => {
-    createGoogleProfile();
-  });
+  initializeGoogleLogin();
+
+  if (googleButton && googleButton.dataset.fallback === "manual") {
+    googleButton.addEventListener("click", () => {
+      createGoogleProfile();
+    });
+  }
 
   profileForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -288,7 +411,9 @@ function initializeDashboard() {
     form.addEventListener("submit", addTodo);
   }
 
-  setInterval(updateClock, 1000);
+  if (!window.__prismClockInterval) {
+    window.__prismClockInterval = setInterval(updateClock, 1000);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", initializeDashboard);
