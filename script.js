@@ -347,12 +347,57 @@ function createGoogleProfile() {
   showDashboard(profile);
 }
 
+function openSettings() {
+  const modal = document.getElementById("settings-modal");
+  if (!modal) {
+    return;
+  }
+
+  const profile = getProfile();
+  if (!profile) {
+    return;
+  }
+
+  document.getElementById("settings-name").value = profile.name || "";
+  document.getElementById("settings-school").value = profile.school || "";
+  document.getElementById("settings-grade").value = profile.grade || "";
+  document.getElementById("settings-goal").value = profile.goal || "";
+
+  modal.classList.remove("hidden");
+}
+
+function closeSettings() {
+  const modal = document.getElementById("settings-modal");
+  if (!modal) {
+    return;
+  }
+
+  modal.classList.add("hidden");
+}
+
+function saveSettings(profileUpdate) {
+  const currentProfile = getProfile() || {};
+  const updatedProfile = {
+    ...currentProfile,
+    ...profileUpdate,
+    provider: currentProfile.provider || "manual"
+  };
+
+  saveProfile(updatedProfile);
+  applyProfileToDashboard(updatedProfile);
+  closeSettings();
+}
+
 function initializeProfileSetup() {
   const profileForm = document.getElementById("profile-form");
   const googleButton = document.getElementById("google-login");
   const existingProfile = getProfile();
   const logoutButton = document.getElementById("logout-button");
   const resetButton = document.getElementById("reset-profile-button");
+  const settingsButton = document.getElementById("settings-button");
+  const closeSettingsButton = document.getElementById("close-settings");
+  const settingsForm = document.getElementById("settings-form");
+  const modal = document.getElementById("settings-modal");
 
   if (logoutButton) {
     logoutButton.addEventListener("click", logoutFromDashboard);
@@ -362,8 +407,42 @@ function initializeProfileSetup() {
     resetButton.addEventListener("click", resetProfileFromDashboard);
   }
 
+  if (settingsButton) {
+    settingsButton.addEventListener("click", openSettings);
+  }
+
+  if (closeSettingsButton) {
+    closeSettingsButton.addEventListener("click", closeSettings);
+  }
+
+  if (modal) {
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) {
+        closeSettings();
+      }
+    });
+  }
+
+  if (settingsForm) {
+    settingsForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      saveSettings({
+        name: document.getElementById("settings-name").value.trim() || "Student Operator",
+        school: document.getElementById("settings-school").value.trim() || "School",
+        grade: document.getElementById("settings-grade").value.trim() || "Grade",
+        goal: document.getElementById("settings-goal").value.trim() || "Stay consistent."
+      });
+    });
+  }
+
   if (existingProfile) {
     showDashboard(existingProfile);
+
+    if (window.matchMedia("(prefers-reduced-motion: no-preference)").matches) {
+      setTimeout(openSettings, 400);
+    }
+
     return;
   }
 
@@ -390,6 +469,7 @@ function initializeProfileSetup() {
 
     saveProfile(profile);
     showDashboard(profile);
+    setTimeout(openSettings, 300);
   });
 }
 
